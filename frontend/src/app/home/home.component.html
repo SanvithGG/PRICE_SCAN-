@@ -1,0 +1,297 @@
+<main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-12">
+  
+  <!-- HERO SECTION (Matching User Image Exactly) -->
+  <section class="space-y-6">
+    
+    <!-- Kicker Tag -->
+    <div class="flex items-center gap-2 text-xs font-mono tracking-widest text-[#8b929e] uppercase">
+      <span class="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+      LIVE PRICE INTELLIGENCE
+    </div>
+
+    <!-- Main Title: One search. Every store. -->
+    <h1 class="font-display text-6xl sm:text-8xl font-black tracking-tight text-white leading-[0.98]">
+      One search.<br />
+      <span class="text-[#d4ff00]">Every</span> store.
+    </h1>
+
+    <!-- Subtitle Paragraph -->
+    <p class="text-base sm:text-xl text-[#9ca3af] font-normal leading-relaxed max-w-2xl">
+      Type a product. We scan Amazon, Flipkart, eBay, Walmart, Myntra and more — then hand you the winner with a direct buy link.
+    </p>
+  </section>
+
+  <!-- SEARCH CONTROL BAR (Matching User Image Exactly) -->
+  <section class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
+      
+      <!-- Input field: e.g. Sony WH-1000XM5 headphones -->
+      <div class="md:col-span-6 lg:col-span-7 relative bg-[#060709] border border-[#1b1e27] focus-within:border-[#d4ff00] rounded flex items-center px-4 h-16 transition-colors">
+        <svg class="w-5 h-5 text-[#6b7280] mr-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          type="text"
+          [value]="ps.query()"
+          (input)="ps.updateQuery($any($event.target).value)"
+          (keydown.enter)="ps.startSearch()"
+          placeholder="e.g. Sony WH-1000XM5 headphones"
+          class="w-full bg-transparent text-white placeholder-[#374151] text-lg font-mono font-medium focus:outline-none"
+        />
+      </div>
+
+      <!-- Region Selector Tabs: BOTH | INDIA | GLOBAL -->
+      <div class="md:col-span-3 lg:col-span-3 bg-[#060709] border border-[#1b1e27] rounded flex items-center p-1 h-16">
+        <button 
+          (click)="ps.setRegion('both')" 
+          [class]="ps.region() === 'both' ? 'bg-white text-black font-extrabold shadow' : 'text-[#8b929e] hover:text-white font-bold'"
+          class="flex-1 py-3 text-xs font-mono tracking-wider uppercase transition-all rounded cursor-pointer text-center"
+        >
+          BOTH
+        </button>
+        <button 
+          (click)="ps.setRegion('india')" 
+          [class]="ps.region() === 'india' ? 'bg-white text-black font-extrabold shadow' : 'text-[#8b929e] hover:text-white font-bold'"
+          class="flex-1 py-3 text-xs font-mono tracking-wider uppercase transition-all rounded cursor-pointer text-center"
+        >
+          INDIA
+        </button>
+        <button 
+          (click)="ps.setRegion('global')" 
+          [class]="ps.region() === 'global' ? 'bg-white text-black font-extrabold shadow' : 'text-[#8b929e] hover:text-white font-bold'"
+          class="flex-1 py-3 text-xs font-mono tracking-wider uppercase transition-all rounded cursor-pointer text-center"
+        >
+          GLOBAL
+        </button>
+      </div>
+
+      <!-- Scan Action Button -->
+      <button
+        (click)="ps.startSearch()"
+        [disabled]="ps.loading()"
+        class="md:col-span-3 lg:col-span-2 bg-[#d4ff00] hover:bg-[#e0ff33] disabled:opacity-80 text-black font-mono font-black text-sm tracking-widest uppercase h-16 rounded transition-all cursor-pointer flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(212,255,0,0.2)]"
+      >
+        <span *ngIf="ps.loading()" class="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full"></span>
+        {{ ps.loading() ? 'SCANNING...' : 'SCAN' }}
+      </button>
+
+    </div>
+
+    <!-- Quick Tags Chips Row: TRY: iPhone 15 | PS5 slim | Nike Air Max | Dyson V15 -->
+    <div class="flex flex-wrap items-center gap-3 text-xs font-mono pt-1">
+      <span class="text-[#4b5563] uppercase tracking-wider">TRY:</span>
+      <button (click)="ps.startSearch('iPhone 15')" class="px-4 py-2 bg-[#090a0c] hover:bg-[#12141a] text-white rounded border border-[#1b1e27] hover:border-[#374151] transition-colors cursor-pointer">iPhone 15</button>
+      <button (click)="ps.startSearch('PS5 slim')" class="px-4 py-2 bg-[#090a0c] hover:bg-[#12141a] text-white rounded border border-[#1b1e27] hover:border-[#374151] transition-colors cursor-pointer">PS5 slim</button>
+      <button (click)="ps.startSearch('Nike Air Max')" class="px-4 py-2 bg-[#090a0c] hover:bg-[#12141a] text-white rounded border border-[#1b1e27] hover:border-[#374151] transition-colors cursor-pointer">Nike Air Max</button>
+      <button (click)="ps.startSearch('Dyson V15')" class="px-4 py-2 bg-[#090a0c] hover:bg-[#12141a] text-white rounded border border-[#1b1e27] hover:border-[#374151] transition-colors cursor-pointer">Dyson V15</button>
+    </div>
+  </section>
+
+  <!-- HERO STATS GRID (Displayed before search) -->
+  <section *ngIf="!ps.searchExecuted()" class="border border-[#181b24] bg-[#060709] rounded-lg overflow-hidden grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[#181b24] shadow-xl mt-8">
+    <div class="p-8 space-y-2">
+      <p class="text-[10px] font-mono font-bold tracking-widest text-[#6b7280] uppercase">STORES</p>
+      <p class="font-display text-4xl sm:text-5xl font-black text-white">10+</p>
+    </div>
+    <div class="p-8 space-y-2">
+      <p class="text-[10px] font-mono font-bold tracking-widest text-[#6b7280] uppercase">REGIONS</p>
+      <p class="font-display text-4xl sm:text-5xl font-black text-white">IN · Global</p>
+    </div>
+    <div class="p-8 space-y-2">
+      <p class="text-[10px] font-mono font-bold tracking-widest text-[#6b7280] uppercase">AVG. SCAN</p>
+      <p class="font-display text-4xl sm:text-5xl font-black text-white">~8s</p>
+    </div>
+    <div class="p-8 space-y-2">
+      <p class="text-[10px] font-mono font-bold tracking-widest text-[#6b7280] uppercase">SIGNUP</p>
+      <p class="font-display text-4xl sm:text-5xl font-black text-white">Optional</p>
+    </div>
+  </section>
+
+  <!-- TERMINAL SCANNING LOG PANEL (Displayed after search is triggered) -->
+  <section *ngIf="ps.searchExecuted()" class="bg-[#060709] border border-[#181b24] rounded-lg p-6 font-mono text-sm shadow-2xl space-y-3">
+    <!-- Command prompt line -->
+    <div class="flex items-center gap-2 text-xs text-[#858f9d] pb-3 border-b border-[#141720]">
+      <span class="text-[#eab308] font-bold">$</span>
+      <span class="text-[#9ca3af]">scan</span>
+      <span class="text-[#d4ff00]">--query="{{ ps.query() }}"</span>
+      <span class="text-[#d4ff00]">--region-{{ ps.region() }}</span>
+    </div>
+
+    <!-- Live Terminal Outputs -->
+    <div class="space-y-2 py-1">
+      <div *ngFor="let step of ps.terminalLogs()" class="flex items-center justify-between text-xs sm:text-sm">
+        <div class="flex items-center gap-3">
+          <span *ngIf="step.status === 'ok'" class="text-[#22c55e] font-bold">✓</span>
+          <span *ngIf="step.status === 'scanning'" class="text-[#d4ff00] font-bold animate-pulse">▶</span>
+          <span *ngIf="step.status === 'pending'" class="text-[#4b5563]">·</span>
+          <span [class]="step.status === 'ok' ? 'text-[#e5e7eb]' : step.status === 'scanning' ? 'text-[#d4ff00] font-medium' : 'text-[#4b5563]'">
+            {{ step.name }}
+          </span>
+        </div>
+        <span *ngIf="step.status === 'ok'" class="text-[#6b7280]">ok</span>
+        <span *ngIf="step.status === 'scanning'" class="text-[#d4ff00] text-xs uppercase animate-pulse font-semibold">scanning...</span>
+      </div>
+
+      <div *ngIf="ps.terminalPhase() === 'done'" class="pt-2 text-xs text-[#9ca3af] flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#d4ff00]"></span>
+        Aggregating results
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH RESULTS SECTION -->
+  <section *ngIf="ps.terminalPhase() === 'done' && ps.results().length > 0" class="space-y-8 pt-2">
+    
+    <!-- Results Header & Filter Controls -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#181b24] pb-5">
+      <div>
+        <p class="text-[10px] font-mono tracking-widest text-[#6b7280] uppercase">RESULTS FOR</p>
+        <h2 class="font-display text-4xl sm:text-5xl font-black text-white tracking-tight leading-none mt-1">
+          {{ ps.query() }}
+        </h2>
+        <p class="text-xs font-mono text-[#8b929e] mt-2">
+          {{ ps.filteredResults().length }} listings · region: {{ ps.region() }}
+        </p>
+      </div>
+
+      <!-- Filter & Sort Controls -->
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <select
+            [value]="ps.siteFilter()"
+            (change)="ps.setSiteFilter($any($event.target).value)"
+            class="appearance-none bg-[#090a0c] text-white border border-[#222734] rounded px-4 py-2 pr-8 text-xs font-mono font-medium focus:outline-none focus:border-[#d4ff00] cursor-pointer"
+          >
+            <option value="all">All sites</option>
+            <option value="amazon">Amazon</option>
+            <option value="flipkart">Flipkart</option>
+            <option value="walmart">Walmart</option>
+            <option value="ebay">eBay</option>
+            <option value="reliance">Reliance Digital</option>
+            <option value="best buy">Best Buy</option>
+            <option value="myntra">Myntra</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#8b929e]">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </div>
+
+        <div class="relative">
+          <select
+            [value]="ps.sortOption()"
+            (change)="ps.setSortOption($any($event.target).value)"
+            class="appearance-none bg-[#090a0c] text-white border border-[#222734] rounded px-4 py-2 pr-8 text-xs font-mono font-medium focus:outline-none focus:border-[#d4ff00] cursor-pointer"
+          >
+            <option value="price-asc">Price: Low → High</option>
+            <option value="price-desc">Price: High → Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#8b929e]">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURED BEST DEAL / WINNER CARD -->
+    <div *ngIf="ps.winner()" class="grid grid-cols-1 lg:grid-cols-12 bg-[#090a0c] rounded-lg overflow-hidden border border-[#1b1e27] shadow-2xl items-stretch">
+      
+      <div class="lg:col-span-6 p-4 bg-[#08090b] flex flex-col justify-between">
+        <div class="relative flex-1 w-full rounded border-2 border-[#d4ff00] overflow-hidden min-h-[320px] bg-[#0f1117] flex items-center justify-center group shadow-[0_0_20px_rgba(212,255,0,0.12)]">
+          <span class="absolute top-0 left-0 bg-[#d4ff00] text-black font-extrabold text-[10px] tracking-wider uppercase px-3 py-1 z-10">
+            BEST DEAL
+          </span>
+          <img [src]="ps.winner()?.image" [alt]="ps.winner()?.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          
+          <div class="absolute bottom-3 left-3 bg-black/90 text-white px-2.5 py-1 rounded text-[9px] font-bold font-mono tracking-wider">
+            {{ ps.winner()?.store }}
+          </div>
+          <div class="absolute bottom-3 right-3 bg-black/90 text-[#eab308] px-2.5 py-1 rounded text-[9px] font-bold font-mono">
+            ★ {{ ps.winner()?.rating }} <span class="text-[#9ca3af]">({{ ps.winner()?.reviews }})</span>
+          </div>
+        </div>
+        <h3 class="font-bold text-white text-sm mt-3 px-1">{{ ps.winner()?.title }}</h3>
+      </div>
+
+      <div class="lg:col-span-6 p-8 sm:p-10 flex flex-col justify-between space-y-6">
+        <div class="space-y-4">
+          <span class="text-xs font-mono font-bold tracking-widest text-[#d4ff00] uppercase">
+            WINNER
+          </span>
+          <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            Best price on the market
+          </h3>
+          <p class="text-sm text-[#9ca3af] leading-relaxed">
+            Cross-checked across {{ ps.results().length }} listings from 8 stores. This one wins on price with a solid rating.
+          </p>
+
+          <div class="pt-4 border-t border-[#181b24] space-y-2 font-mono text-xs text-[#9ca3af]">
+            <div>Store · <span class="text-white font-bold">{{ ps.winner()?.site }}</span></div>
+            <div>Rating · <span class="text-white font-bold">{{ ps.winner()?.rating }} ({{ ps.winner()?.reviews }} reviews)</span></div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-4">
+          <div>
+            <p class="text-[9px] font-mono text-[#6b7280] uppercase">WINNING PRICE</p>
+            <p class="text-3xl font-extrabold font-mono text-[#d4ff00]">${{ ps.winner()?.price }}</p>
+          </div>
+          <a 
+            [href]="ps.winner()?.url" 
+            target="_blank" 
+            rel="noopener" 
+            class="bg-[#242731] hover:bg-[#d4ff00] hover:text-black text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded transition-colors flex items-center gap-2"
+          >
+            Buy Now
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRODUCT CARDS GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <article *ngFor="let item of ps.filteredResults()" class="bg-[#090a0c] border border-[#1b1e27] hover:border-[#2f3544] rounded overflow-hidden flex flex-col justify-between transition-all group">
+        
+        <div class="relative aspect-square bg-[#08090b] overflow-hidden">
+          <img [src]="item.image" [alt]="item.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          
+          <div class="absolute bottom-3 left-3 bg-black/90 text-white font-mono text-[9px] font-extrabold tracking-wider px-2 py-1 rounded">
+            {{ item.store }}
+          </div>
+
+          <div class="absolute bottom-3 right-3 bg-black/90 text-[#eab308] font-mono text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1">
+            ★ {{ item.rating }} <span class="text-[#8892a0]">({{ item.reviews }})</span>
+          </div>
+        </div>
+
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
+          <h4 class="font-bold text-white text-sm line-clamp-2 leading-snug">
+            {{ item.title }}
+          </h4>
+
+          <div class="space-y-3 pt-1">
+            <div>
+              <p class="text-[9px] font-mono text-[#6b7280] uppercase tracking-wider">PRICE</p>
+              <p class="text-2xl font-extrabold font-mono text-white tracking-tight">${{ item.price }}</p>
+            </div>
+
+            <a
+              [href]="item.url"
+              target="_blank"
+              rel="noopener"
+              class="w-full bg-[#1e222d] hover:bg-[#2a3040] text-white hover:text-[#d4ff00] text-center font-bold text-xs py-3 rounded transition-colors flex items-center justify-center gap-1.5"
+            >
+              Buy Now
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+      </article>
+    </div>
+
+  </section>
+
+</main>

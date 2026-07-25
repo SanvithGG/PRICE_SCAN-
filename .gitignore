@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Angular
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE & Editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+Thumbs.db
+.DS_Store
+*.log

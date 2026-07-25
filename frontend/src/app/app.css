@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #08090b;
+  color: #f3f4f6;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
