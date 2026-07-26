@@ -30,7 +30,7 @@ export interface TerminalStep {
 })
 export class PriceScanService {
   private readonly http = inject(HttpClient);
-  private readonly apiBase = 'http://localhost:8080/api';
+  private readonly apiBase = 'http://localhost:8081/api';
 
   // Search & Filter State
   readonly query = signal('');
