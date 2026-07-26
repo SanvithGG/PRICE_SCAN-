@@ -31,7 +31,7 @@ import { PriceScanService } from '../services/price-scan.service';
       </div>
 
       <!-- Right Half: Dark Form Panel -->
-      <div class="bg-[#08090b] p-10 sm:p-20 flex flex-col justify-center max-w-md mx-auto w-full space-y-8">
+      <div class="bg-[#08090b] p-10 sm:p-20 flex flex-col justify-center max-w-md mx-auto w-full space-y-8 animate-card-enter">
         
         <!-- Subtitle & Title -->
         <div class="space-y-1">
@@ -46,48 +46,48 @@ import { PriceScanService } from '../services/price-scan.service';
         <!-- Auth Form -->
         <form (submit)="$event.preventDefault()" class="space-y-6">
           
-          <div *ngIf="isSignup()" class="space-y-2">
+          <div *ngIf="isSignup()" class="space-y-2 animate-card-enter" style="animation-delay: 50ms">
             <label class="block text-[10px] font-mono font-bold text-[#8b929e] uppercase tracking-[0.2em]">NAME</label>
             <input
               type="text"
               [value]="authName()"
               (input)="authName.set($any($event.target).value)"
               placeholder="Your name"
-              class="w-full bg-[#040507] text-white border border-[#1a1d26] focus:border-[#d4ff00] rounded px-4 py-3.5 text-sm font-medium focus:outline-none transition-colors"
+              class="w-full bg-[#040507] text-white border border-[#1a1d26] focus:border-[#d4ff00] rounded-lg px-4 py-3.5 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#d4ff00] transition-all"
             />
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2 animate-card-enter" style="animation-delay: 100ms">
             <label class="block text-[10px] font-mono font-bold text-[#8b929e] uppercase tracking-[0.2em]">EMAIL</label>
             <input
               type="email"
               [value]="authEmail()"
               (input)="authEmail.set($any($event.target).value)"
               placeholder="you@example.com"
-              class="w-full bg-[#040507] text-white border border-[#1a1d26] focus:border-[#d4ff00] rounded px-4 py-3.5 text-sm font-medium focus:outline-none transition-colors"
+              class="w-full bg-[#040507] text-white border border-[#1a1d26] focus:border-[#d4ff00] rounded-lg px-4 py-3.5 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#d4ff00] transition-all"
             />
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2 animate-card-enter" style="animation-delay: 150ms">
             <label class="block text-[10px] font-mono font-bold text-[#8b929e] uppercase tracking-[0.2em]">PASSWORD</label>
             <input
               type="password"
               [value]="authPassword()"
               (input)="authPassword.set($any($event.target).value)"
               placeholder="••••••••"
-              class="w-full bg-[#040507] text-white border border-[#1a1d26] focus:border-[#d4ff00] rounded px-4 py-3.5 text-sm font-medium focus:outline-none transition-colors"
+              class="w-full bg-[#040507] text-white border border-[#1a1d26] focus:border-[#d4ff00] rounded-lg px-4 py-3.5 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#d4ff00] transition-all"
             />
           </div>
 
           <button
             type="button"
             (click)="submitForm()"
-            class="w-full bg-[#d4ff00] hover:bg-[#e0ff33] text-black font-mono font-bold text-xs tracking-wider uppercase py-4 rounded transition-all shadow-[0_0_15px_rgba(212,255,0,0.2)] cursor-pointer mt-4"
+            class="w-full btn-shimmer text-black font-mono font-bold text-xs tracking-wider uppercase py-4 rounded-lg transition-all shadow-[0_0_20px_rgba(212,255,0,0.25)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer mt-4"
           >
             {{ isSignup() ? 'CREATE ACCOUNT' : 'LOG IN' }}
           </button>
 
-          <p *ngIf="message()" class="text-xs font-mono text-amber-400 pt-1">{{ message() }}</p>
+          <p *ngIf="message()" class="text-xs font-mono text-amber-400 pt-1 animate-card-enter">{{ message() }}</p>
         </form>
 
         <!-- Switch Auth Mode Router Link -->

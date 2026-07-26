@@ -45,3 +45,124 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #323744;
 }
+
+/* Keyframe Animations */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212, 255, 0, 0.2), inset 0 0 10px rgba(212, 255, 0, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(212, 255, 0, 0.45), inset 0 0 20px rgba(212, 255, 0, 0.15);
+  }
+}
+
+@keyframes scanlineSweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0.2;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes modalScale {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes badgeGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(212, 255, 0, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(212, 255, 0, 0.9));
+  }
+}
+
+/* Custom Animation Utility Classes */
+.animate-card-enter {
+  animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-neon-pulse {
+  animation: neonPulse 3s infinite ease-in-out;
+}
+
+.animate-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-scanline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(212, 255, 0, 0.08), transparent);
+  pointer-events: none;
+  animation: scanlineSweep 2.5s infinite linear;
+}
+
+.animate-modal-pop {
+  animation: modalScale 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-badge-glow {
+  animation: badgeGlow 2s infinite ease-in-out;
+}
+
+.btn-shimmer {
+  background-size: 200% 100%;
+  background-image: linear-gradient(110deg, #d4ff00 0%, #e0ff33 45%, #ffffff 50%, #e0ff33 55%, #d4ff00 100%);
+  transition: all 0.3s ease;
+}
+
+.btn-shimmer:hover {
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Card Hover Elevation */
+.card-hover-glow {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover-glow:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 255, 0, 0.4);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 255, 0, 0.12);
+}
+

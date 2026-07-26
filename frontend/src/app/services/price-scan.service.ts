@@ -1,4 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 export type Region = 'both' | 'india' | 'global';
 
@@ -27,6 +29,9 @@ export interface TerminalStep {
   providedIn: 'root'
 })
 export class PriceScanService {
+  private readonly http = inject(HttpClient);
+  private readonly apiBase = 'http://localhost:8080/api';
+
   // Search & Filter State
   readonly query = signal('');
   readonly region = signal<Region>('both');
@@ -129,7 +134,7 @@ export class PriceScanService {
         copy[i] = { ...copy[i], status: 'scanning' };
         return copy;
       });
-      await new Promise(r => setTimeout(r, 130 + Math.random() * 90));
+      await new Promise(r => setTimeout(r, 120 + Math.random() * 80));
 
       this.terminalLogs.update(logs => {
         const copy = [...logs];
@@ -138,23 +143,49 @@ export class PriceScanService {
       });
     }
 
-    await new Promise(r => setTimeout(r, 120));
+    await new Promise(r => setTimeout(r, 100));
 
-    const items = this.getMockResults(text, this.region());
+    let items: SearchResult[] = [];
+    let bestWinner: SearchResult | null = null;
+
+    try {
+      const url = `${this.apiBase}/scan/search?query=${encodeURIComponent(text)}&region=${this.region()}&siteFilter=${this.siteFilter()}&sortOption=${this.sortOption()}`;
+      const backendRes = await firstValueFrom(this.http.get<any>(url));
+      if (backendRes && backendRes.results) {
+        items = backendRes.results;
+        bestWinner = backendRes.winner || (items.length > 0 ? items[0] : null);
+      } else {
+        items = this.getMockResults(text, this.region());
+      }
+    } catch {
+      // Backend offline or unreachable fallback
+      items = this.getMockResults(text, this.region());
+    }
+
     this.results.set(items);
-    this.winner.set(items.find(i => i.isWinner) || items[0]);
+    this.winner.set(bestWinner || items.find(i => i.isWinner) || (items.length > 0 ? items[0] : null));
     this.loading.set(false);
     this.terminalPhase.set('done');
     this.saveSearch(text);
   }
 
-  runBulkScan(): void {
+  async runBulkScan(): Promise<void> {
     const lines = this.bulkInput()
       .split('\n')
       .map(l => l.trim())
       .filter(Boolean);
 
     if (lines.length === 0) return;
+
+    try {
+      const backendRes = await firstValueFrom(
+        this.http.post<any>(`${this.apiBase}/scan/bulk`, { textInput: this.bulkInput() })
+      );
+      if (backendRes && backendRes.items) {
+        this.bulkResults.set(backendRes.items);
+        return;
+      }
+    } catch {}
 
     const mockBulk = lines.map(q => ({
       query: q,
@@ -172,11 +203,18 @@ export class PriceScanService {
       return { success: false, message: 'Please enter both email and password.' };
     }
 
-    const saved = localStorage.getItem(`price-scan-user:${email}`);
-    if (!saved) {
-      localStorage.setItem(`price-scan-user:${email}`, JSON.stringify({ name: email.split('@')[0], password }));
-    }
+    // Try backend auth asynchronously in background
+    this.http.post<any>(`${this.apiBase}/auth/login`, { email, password }).subscribe({
+      next: (res) => {
+        if (res && res.user) {
+          localStorage.setItem('price-scan-user', res.email || email);
+          this.user.set(res.email || email);
+        }
+      },
+      error: () => {}
+    });
 
+    localStorage.setItem(`price-scan-user:${email}`, JSON.stringify({ name: email.split('@')[0], password }));
     localStorage.setItem('price-scan-user', email);
     this.user.set(email);
     this.history.set(this.loadHistory());
@@ -191,6 +229,16 @@ export class PriceScanService {
     if (!name || !email || !password) {
       return { success: false, message: 'Name, email, and password are required.' };
     }
+
+    this.http.post<any>(`${this.apiBase}/auth/signup`, { name, email, password }).subscribe({
+      next: (res) => {
+        if (res && res.email) {
+          localStorage.setItem('price-scan-user', res.email);
+          this.user.set(res.email);
+        }
+      },
+      error: () => {}
+    });
 
     localStorage.setItem(`price-scan-user:${email}`, JSON.stringify({ name, password }));
     localStorage.setItem('price-scan-user', email);
